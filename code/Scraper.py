@@ -39,7 +39,7 @@ def extract_text_from_div(text_div):
     text_span = str(text_div.find('span', {"class": "field-content"}))
     text = text_span.replace('<span class="field-content">', '')
     text = text.replace('</span>', '')
-    text = re.sub('[^A-Za-z0-9 ]+', '', text)
+    text = " ".join(text.splitlines())
     return text
 
 

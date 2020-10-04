@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 # It is the output of this url : https://www.asc-csa.gc.ca/eng/open-data/access-the-data.asp
 def readHtml():
     base_path = Path(__file__).parent
-    path = base_path / "../data/raw_data/html_files/Canada_open_data.html"
+    path = base_path / "data/raw_data/html_files/Canada_open_data.html"
 
     data = ""
     with open(path, 'r') as f:
@@ -39,13 +39,13 @@ def extract_text_from_div(text_div):
     text_span = str(text_div.find('span', {"class": "field-content"}))
     text = text_span.replace('<span class="field-content">', '')
     text = text.replace('</span>', '')
-    text = re.sub('[^A-Za-z0-9 ]+', '', text)
+    text = " ".join(text.splitlines())
     return text
 
 
 def write_data_summaries_to_file(summary_dict):
     base_path = Path(__file__).parent
-    path = base_path / "../data/raw_data/summaries/summary_file.txt"
+    path = base_path / "data/raw_data/summaries/summary_file.txt"
 
     with open(path, 'w') as file:
         file.write(json.dumps(summary_dict))

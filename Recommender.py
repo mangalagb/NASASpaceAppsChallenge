@@ -42,25 +42,32 @@ def get_recommendations(corpus_dict, cosine_similarity_matrix):
 
 
 # Print the recommendations
-def print_recommendations(sorted_recommendation_dict, corpus_dict):
+def print_recommendations(sorted_recommendation_dict):
     print("Based on your search query, look at these datasets from CSA :")
 
-    # We limit the search results to 5
-    limit = 5
+    # Read the original summaries to display to the user
+    base_path = Path(__file__).parent
+    path = base_path / "data/raw_data/summaries/summary_file.txt"
+    raw_summary_dict = {}
+
+    with open(path, 'r') as read_file:
+        raw_summary_dict = json.load(read_file)
+
+    # We limit the search results to 10
+    limit = 10
     count = 0
-    result_dict = collections.OrderedDict()
+    result = collections.OrderedDict()
     for title, cosine_similarity in sorted_recommendation_dict.items():
         if cosine_similarity == 0.0 or count == limit:
             break
-        result_dict[title] = corpus_dict[title]
+        result[title] = raw_summary_dict[title]
         count += 1
 
-    for k,v in result_dict.items():
+    for k, v in result.items():
         print(k)
         print(v)
-        print("-----------------------------------------------------------------------------------------")
-
-    return result_dict
+        print("-----------------------------------------------------")
+    return result
 
 
 # Function to tokenize the text blob
@@ -86,14 +93,12 @@ def get_user_query(query_dict):
 
 
 def main():
-    query_dict = {"query": "How did the universe begin? What are the earliest stars?"}
-    #query_dict = {"query": "I want data about mars planet and past missions"}
-    #query_dict = {"query": "Ozone gases and particles"}
+    query_dict = {"query": "I want to know more about WINDII and Doppler and performance"}
 
     user_query = get_user_query(query_dict)
     corpus_dict, cosine_similarity_matrix = process_query(user_query)
     recommendation_dict = get_recommendations(corpus_dict, cosine_similarity_matrix)
-    print_recommendations(recommendation_dict, corpus_dict)
+    print_recommendations(recommendation_dict)
 
 
 # Call main method
