@@ -42,7 +42,7 @@ def get_recommendations(corpus_dict, cosine_similarity_matrix):
 
 
 # Print the recommendations
-def print_recommendations(sorted_recommendation_dict):
+def print_recommendations(sorted_recommendation_dict, presult=False):
     print("Based on your search query, look at these datasets from CSA :")
 
     # Read the original summaries to display to the user
@@ -63,10 +63,11 @@ def print_recommendations(sorted_recommendation_dict):
         result[title] = raw_summary_dict[title]
         count += 1
 
-    for k, v in result.items():
-        print(k)
-        print(v)
-        print("-----------------------------------------------------")
+    if presult:
+        for k, v in result.items():
+            print(k)
+            print(v)
+            print("-----------------------------------------------------")
     return result
 
 
@@ -75,7 +76,6 @@ def tokenize(text):
     tokens = nltk.word_tokenize(text)
     lemma = find_lemma(tokens)
     return lemma
-
 
 # Lemmatize words for better matching
 def find_lemma(tokens):
@@ -86,11 +86,9 @@ def find_lemma(tokens):
         result.append(lemma_word)
     return result
 
-
 def get_user_query(query_dict):
     # Read the input document that needs to be compared
     return query_dict["query"]
-
 
 def main():
     query_dict = {"query": "I want to know more about WINDII and Doppler and performance"}
@@ -98,8 +96,14 @@ def main():
     user_query = get_user_query(query_dict)
     corpus_dict, cosine_similarity_matrix = process_query(user_query)
     recommendation_dict = get_recommendations(corpus_dict, cosine_similarity_matrix)
-    print_recommendations(recommendation_dict)
+    print_recommendations(recommendation_dict, True)
 
+def recommend(query):
+    qdict = {"query": query}
+    user_query = get_user_query(qdict)
+    corpus_dict, cosine_similarity_matrix = process_query(user_query)
+    recommendation_dict = get_recommendations(corpus_dict, cosine_similarity_matrix)
+    return print_recommendations(recommendation_dict)
 
 # Call main method
 if __name__ == "__main__":
