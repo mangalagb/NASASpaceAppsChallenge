@@ -42,16 +42,8 @@ def get_recommendations(corpus_dict, cosine_similarity_matrix):
 
 
 # Print the recommendations
-def print_recommendations(sorted_recommendation_dict):
+def print_recommendations(corpus_dict, sorted_recommendation_dict):
     print("Based on your search query, look at these datasets from CSA :")
-
-    # Read the original summaries to display to the user
-    base_path = Path(__file__).parent
-    path = base_path / "../data/raw_data/summaries/summary_file.txt"
-    raw_summary_dict = {}
-
-    with open(path, 'r') as read_file:
-        raw_summary_dict = json.load(read_file)
 
     # We limit the search results to 10
     limit = 10
@@ -60,7 +52,7 @@ def print_recommendations(sorted_recommendation_dict):
     for title, cosine_similarity in sorted_recommendation_dict.items():
         if cosine_similarity == 0.0 or count == limit:
             break
-        result[title] = raw_summary_dict[title]
+        result[title] = corpus_dict[title]
         count += 1
 
     for k, v in result.items():
@@ -98,7 +90,7 @@ def main():
     user_query = get_user_query(query_dict)
     corpus_dict, cosine_similarity_matrix = process_query(user_query)
     recommendation_dict = get_recommendations(corpus_dict, cosine_similarity_matrix)
-    print_recommendations(recommendation_dict)
+    print_recommendations(corpus_dict, recommendation_dict)
 
 
 # Call main method
